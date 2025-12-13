@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+
+{% block title %}Certifications - Diving Administration{% endblock %}
+
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+    <h1 style="color: white;">Certifications Management</h1>
+</div>
+
+<div class="card">
+    <h2 style="margin-bottom: 1.5rem;">Add New Certification</h2>
+    <form method="POST">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+                <label for="diver_id">Diver *</label>
+                <select id="diver_id" name="diver_id" required>
+                    <option value="">Select a Diver</option>
+                    {% for diver in divers %}
+                    <option value="{{ diver.id }}">{{ diver.first_name }} {{ diver.last_name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="cert_type">Certification Type *</label>
+                <select id="cert_type" name="cert_type" required>
+                    <option value="">Select Type</option>
+                    <option value="Open Water Diver">Open Water Diver</option>
+                    <option value="Advanced Open Water">Advanced Open Water</option>
+                    <option value="Rescue Diver">Rescue Diver</option>
+                    <option value="Divemaster">Divemaster</option>
+                    <option value="Instructor">Instructor</option>
+                    <option value="Specialty - Deep Diving">Specialty - Deep Diving</option>
+                    <option value="Specialty - Nitrox">Specialty - Nitrox</option>
+                    <option value="Specialty - Navigation">Specialty - Navigation</option>
+                    <option value="Specialty - Night Diving">Specialty - Night Diving</option>
+                    <option value="Specialty - Search and Recovery">Specialty - Search and Recovery</option>
+                    <option value="Specialty - Technical">Specialty - Technical</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="agency">Certification Agency</label>
+                <select id="agency" name="agency">
+                    <option value="">Select Agency</option>
+                    <option value="PADI">PADI (Professional Association of Diving Instructors)</option>
+                    <option value="SSI">SSI (Scuba Schools International)</option>
+                    <option value="NAUI">NAUI (National Association for Underwater Instruction)</option>
+                    <option value="TDI">TDI (Technical Diving International)</option>
+                    <option value="IANTD">IANTD (International Association of Nitrox and Technical Divers)</option>
+                    <option value="CMAS">CMAS (Confédération Mondiale des Activités Subaquatiques)</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="cert_number">Certification Number</label>
+                <input type="text" id="cert_number" name="cert_number">
+            </div>
+            <div class="form-group">
+                <label for="date_issued">Date Issued *</label>
+                <input type="date" id="date_issued" name="date_issued" required>
+            </div>
+            <div class="form-group">
+                <label for="expiration_date">Expiration Date</label>
+                <input type="date" id="expiration_date" name="expiration_date">
+            </div>
+        </div>
+        <button type="submit">Add Certification</button>
+    </form>
+</div>
+
+<div class="card">
+    <h2 style="margin-bottom: 1.5rem;">All Certifications</h2>
+    {% if certifications %}
+    <table>
+        <thead>
+            <tr>
+                <th>Diver</th>
+                <th>Certification Type</th>
+                <th>Agency</th>
+                <th>Cert Number</th>
+                <th>Date Issued</th>
+                <th>Expiration</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for cert in certifications %}
+            <tr>
+                <td><strong>{{ cert.diver.first_name }} {{ cert.diver.last_name }}</strong></td>
+                <td>{{ cert.cert_type }}</td>
+                <td>{{ cert.agency or 'N/A' }}</td>
+                <td>{{ cert.cert_number or 'N/A' }}</td>
+                <td>{{ cert.date_issued.strftime('%Y-%m-%d') if cert.date_issued else 'N/A' }}</td>
+                <td>{{ cert.expiration_date.strftime('%Y-%m-%d') if cert.expiration_date else 'No expiration' }}</td>
+                <td>
+                    {% if cert.expiration_date %}
+                        {% if cert.expiration_date < now %}
+                        <span style="padding: 0.25rem 0.75rem; border-radius: 3px; background: #fadbd8; color: #e74c3c;">Expired</span>
+                        {% elif (cert.expiration_date - now).days <= 90 %}
+                        <span style="padding: 0.25rem 0.75rem; border-radius: 3px; background: #fde3d1; color: #e67e22;">Expiring Soon</span>
+                        {% else %}
+                        <span style="padding: 0.25rem 0.75rem; border-radius: 3px; background: #d5f4e6; color: #27ae60;">Active</span>
+                        {% endif %}
+                    {% else %}
+                    <span style="padding: 0.25rem 0.75rem; border-radius: 3px; background: #d5f4e6; color: #27ae60;">Active</span>
+                    {% endif %}
+                </td>
+                <td>
+                    <form method="POST" action="{{ url_for('delete_certification', cert_id=cert.id) }}" style="display: inline;">
+                        <button type="submit" class="btn-danger" style="padding: 0.5rem 1rem; font-size: 0.9rem;" onclick="return confirm('Delete this certification?');">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p style="color: #999; text-align: center; padding: 2rem;">No certifications recorded yet. Add a certification above!</p>
+    {% endif %}
+</div>
+{% endblock %}

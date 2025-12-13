@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+
+{% block title %}Dive Sites - Diving Administration{% endblock %}
+
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+    <h1 style="color: white;">Dive Sites</h1>
+    {% if current_user.role == 'admin' %}
+    <button onclick="document.getElementById('addSiteForm').style.display='block'" style="background: rgba(255,255,255,0.2); color: white; border: 1px solid white;">+ Add Site</button>
+    {% endif %}
+</div>
+
+{% if current_user.role == 'admin' %}
+<div id="addSiteForm" class="card" style="display: none; margin-bottom: 2rem;">
+    <h2 style="margin-bottom: 1.5rem;">Add New Dive Site</h2>
+    <form method="POST">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+                <label for="name">Site Name *</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            <div class="form-group">
+                <label for="location">Location *</label>
+                <input type="text" id="location" name="location" required>
+            </div>
+            <div class="form-group">
+                <label for="difficulty_level">Difficulty Level</label>
+                <select id="difficulty_level" name="difficulty_level">
+                    <option value="">Select Level</option>
+                    <option value="Beginner">Beginner</option>
+                    <option value="Intermediate">Intermediate</option>
+                    <option value="Advanced">Advanced</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="water_temperature">Water Temperature (°C)</label>
+                <input type="number" id="water_temperature" name="water_temperature" step="0.1">
+            </div>
+            <div class="form-group">
+                <label for="depth_min">Min Depth (meters)</label>
+                <input type="number" id="depth_min" name="depth_min" step="0.1">
+            </div>
+            <div class="form-group">
+                <label for="depth_max">Max Depth (meters)</label>
+                <input type="number" id="depth_max" name="depth_max" step="0.1">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="visibility">Visibility</label>
+            <input type="text" id="visibility" name="visibility" placeholder="e.g., 20m, Excellent">
+        </div>
+        <div class="form-group">
+            <label for="description">Description</label>
+            <textarea id="description" name="description" rows="3"></textarea>
+        </div>
+        <button type="submit">Add Dive Site</button>
+        <button type="button" class="btn-secondary" onclick="document.getElementById('addSiteForm').style.display='none'" style="margin-left: 0.5rem;">Cancel</button>
+    </form>
+</div>
+{% endif %}
+
+<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 1.5rem;">
+    {% if sites %}
+        {% for site in sites %}
+        <div class="card" style="margin: 0;">
+            <h3 style="color: #667eea; margin-bottom: 0.5rem;">{{ site.name }}</h3>
+            <p style="color: #666; margin-bottom: 1rem;">📍 {{ site.location }}</p>
+            
+            <div style="background: #f8f9fa; padding: 1rem; border-radius: 5px; margin-bottom: 1rem; font-size: 0.9rem;">
+                {% if site.difficulty_level %}
+                <p><strong>Difficulty:</strong> {{ site.difficulty_level }}</p>
+                {% endif %}
+                {% if site.depth_min and site.depth_max %}
+                <p><strong>Depth:</strong> {{ site.depth_min }}-{{ site.depth_max }}m</p>
+                {% endif %}
+                {% if site.water_temperature %}
+                <p><strong>Temperature:</strong> {{ site.water_temperature }}°C</p>
+                {% endif %}
+                {% if site.visibility %}
+                <p><strong>Visibility:</strong> {{ site.visibility }}</p>
+                {% endif %}
+            </div>
+            
+            {% if site.description %}
+            <p style="color: #666; font-size: 0.9rem; margin-bottom: 1rem;">{{ site.description[:100] }}{% if site.description|length > 100 %}...{% endif %}</p>
+            {% endif %}
+            
+            <a href="{{ url_for('dives') }}" style="color: #667eea; text-decoration: none;">Log a dive here →</a>
+        </div>
+        {% endfor %}
+    {% else %}
+    <p style="color: #999; grid-column: 1/-1; text-align: center; padding: 2rem;">No dive sites available yet.</p>
+    {% endif %}
+</div>
+{% endblock %}

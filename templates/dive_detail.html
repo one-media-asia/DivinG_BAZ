@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block title %}Dive Detail - Diving Administration{% endblock %}
+
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+    <h1 style="color: white;">Dive at {{ dive.site.name }}</h1>
+    <a href="{{ url_for('dives') }}" style="color: white; text-decoration: none; background: rgba(255,255,255,0.2); padding: 0.75rem 1.5rem; border-radius: 5px;">← Back</a>
+</div>
+
+<div class="card">
+    <h2 style="margin-bottom: 1.5rem;">Dive Details</h2>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+        <div>
+            <p><strong>Location:</strong> {{ dive.site.location }}</p>
+            <p><strong>Date & Time:</strong> {{ dive.dive_date.strftime('%B %d, %Y at %H:%M') }}</p>
+            <p><strong>Duration:</strong> {{ dive.duration_minutes or 'N/A' }} minutes</p>
+            <p><strong>Max Depth:</strong> {{ dive.max_depth or 'N/A' }} meters</p>
+            <p><strong>Air Used:</strong> {{ dive.air_used or 'N/A' }} PSI/Bar</p>
+            <p><strong>Conditions:</strong> {{ dive.conditions or 'N/A' }}</p>
+        </div>
+        <div>
+            <h3 style="color: #667eea; margin-bottom: 1rem;">Site Info</h3>
+            <p><strong>Difficulty:</strong> {{ dive.site.difficulty_level or 'N/A' }}</p>
+            <p><strong>Depth Range:</strong> {{ dive.site.depth_min or 'N/A' }} - {{ dive.site.depth_max or 'N/A' }} meters</p>
+            <p><strong>Water Temperature:</strong> {{ dive.site.water_temperature or 'N/A' }}°C</p>
+            <p><strong>Visibility:</strong> {{ dive.site.visibility or 'N/A' }}</p>
+            <p style="margin-top: 1rem; color: #666;">{{ dive.site.description or 'No description available.' }}</p>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <h2 style="margin-bottom: 1.5rem;">Divers Participated</h2>
+    {% if dive.divers %}
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Certification</th>
+                <th>Experience Dives</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for diver in dive.divers %}
+            <tr>
+                <td><strong>{{ diver.first_name }} {{ diver.last_name }}</strong></td>
+                <td>{{ diver.certification_level or 'N/A' }}</td>
+                <td>{{ diver.experience_dives or 0 }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p style="color: #999;">No divers recorded for this dive.</p>
+    {% endif %}
+</div>
+
+{% if dive.notes %}
+<div class="card">
+    <h2 style="margin-bottom: 1rem;">Notes</h2>
+    <p style="white-space: pre-wrap; line-height: 1.6;">{{ dive.notes }}</p>
+</div>
+{% endif %}
+{% endblock %}

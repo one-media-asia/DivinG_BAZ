@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block title %}Divers - Diving Administration{% endblock %}
+
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+    <h1 style="color: white;">Divers Management</h1>
+</div>
+
+<div class="card">
+    <h2 style="margin-bottom: 1.5rem;">Add New Diver</h2>
+    <form method="POST">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+                <label for="first_name">First Name *</label>
+                <input type="text" id="first_name" name="first_name" required>
+            </div>
+            <div class="form-group">
+                <label for="last_name">Last Name *</label>
+                <input type="text" id="last_name" name="last_name" required>
+            </div>
+            <div class="form-group">
+                <label for="certification_level">Certification Level</label>
+                <select id="certification_level" name="certification_level">
+                    <option value="">Select Level</option>
+                    <option value="Open Water">Open Water Diver</option>
+                    <option value="Advanced">Advanced Open Water</option>
+                    <option value="Rescue">Rescue Diver</option>
+                    <option value="Divemaster">Divemaster</option>
+                    <option value="Instructor">Instructor</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="certification_number">Certification Number</label>
+                <input type="text" id="certification_number" name="certification_number">
+            </div>
+            <div class="form-group">
+                <label for="phone">Phone</label>
+                <input type="text" id="phone" name="phone">
+            </div>
+            <div class="form-group">
+                <label for="emergency_contact">Emergency Contact</label>
+                <input type="text" id="emergency_contact" name="emergency_contact">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="medical_conditions">Medical Conditions</label>
+            <textarea id="medical_conditions" name="medical_conditions" rows="3"></textarea>
+        </div>
+        <button type="submit">Add Diver</button>
+    </form>
+</div>
+
+<div class="card">
+    <h2 style="margin-bottom: 1.5rem;">Your Divers</h2>
+    {% if divers %}
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Certification</th>
+                <th>Cert. Number</th>
+                <th>Phone</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for diver in divers %}
+            <tr>
+                <td><strong>{{ diver.first_name }} {{ diver.last_name }}</strong></td>
+                <td>{{ diver.certification_level or 'N/A' }}</td>
+                <td>{{ diver.certification_number or 'N/A' }}</td>
+                <td>{{ diver.phone or 'N/A' }}</td>
+                <td>
+                    <a href="{{ url_for('diver_detail', diver_id=diver.id) }}" style="color: #667eea; text-decoration: none; margin-right: 1rem;">View</a>
+                    <form method="POST" action="{{ url_for('delete_diver', diver_id=diver.id) }}" style="display: inline;">
+                        <button type="submit" class="btn-danger" style="padding: 0.5rem 1rem; font-size: 0.9rem;" onclick="return confirm('Delete this diver?');">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p style="color: #999; text-align: center; padding: 2rem;">No divers yet. Add your first diver above!</p>
+    {% endif %}
+</div>
+{% endblock %}

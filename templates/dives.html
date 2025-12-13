@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+
+{% block title %}Dives - Diving Administration{% endblock %}
+
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+    <h1 style="color: white;">Dive Log</h1>
+</div>
+
+<div class="card">
+    <h2 style="margin-bottom: 1.5rem;">Log New Dive</h2>
+    <form method="POST">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+                <label for="site_id">Dive Site *</label>
+                <select id="site_id" name="site_id" required>
+                    <option value="">Select Site</option>
+                    {% for site in sites %}
+                    <option value="{{ site.id }}">{{ site.name }} - {{ site.location }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="dive_date">Dive Date & Time *</label>
+                <input type="datetime-local" id="dive_date" name="dive_date" required>
+            </div>
+            <div class="form-group">
+                <label for="duration_minutes">Duration (minutes)</label>
+                <input type="number" id="duration_minutes" name="duration_minutes">
+            </div>
+            <div class="form-group">
+                <label for="max_depth">Max Depth (meters)</label>
+                <input type="number" id="max_depth" name="max_depth" step="0.1">
+            </div>
+            <div class="form-group">
+                <label for="air_used">Air Used (PSI/Bar)</label>
+                <input type="number" id="air_used" name="air_used" step="0.1">
+            </div>
+            <div class="form-group">
+                <label for="conditions">Conditions</label>
+                <input type="text" id="conditions" name="conditions" placeholder="e.g., Calm, Sunny">
+            </div>
+        </div>
+        <div class="form-group">
+            <label>Divers</label>
+            <div style="max-height: 150px; overflow-y: auto; padding: 0.75rem; border: 1px solid #ddd; border-radius: 5px;">
+                {% for diver in divers %}
+                <label style="display: flex; align-items: center; margin: 0.5rem 0; font-weight: normal;">
+                    <input type="checkbox" name="diver_ids" value="{{ diver.id }}" style="margin-right: 0.5rem; width: auto;">
+                    {{ diver.first_name }} {{ diver.last_name }}
+                </label>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="notes">Notes</label>
+            <textarea id="notes" name="notes" rows="3" placeholder="Additional details about the dive..."></textarea>
+        </div>
+        <button type="submit">Log Dive</button>
+    </form>
+</div>
+
+<div class="card">
+    <h2 style="margin-bottom: 1.5rem;">Your Dives</h2>
+    {% if dives %}
+    <table>
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Site</th>
+                <th>Duration</th>
+                <th>Max Depth</th>
+                <th>Divers</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for dive in dives %}
+            <tr>
+                <td>{{ dive.dive_date.strftime('%Y-%m-%d %H:%M') }}</td>
+                <td><strong>{{ dive.site.name }}</strong></td>
+                <td>{{ dive.duration_minutes or 'N/A' }} min</td>
+                <td>{{ dive.max_depth or 'N/A' }} m</td>
+                <td>
+                    {% for diver in dive.divers %}
+                    <span style="display: inline-block; background: #f0f0f0; padding: 0.25rem 0.5rem; border-radius: 3px; margin-right: 0.25rem;">
+                        {{ diver.first_name }} {{ diver.last_name }}
+                    </span>
+                    {% endfor %}
+                </td>
+                <td>
+                    <a href="{{ url_for('dive_detail', dive_id=dive.id) }}" style="color: #667eea; text-decoration: none;">View</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p style="color: #999; text-align: center; padding: 2rem;">No dives logged yet. Start tracking your adventures!</p>
+    {% endif %}
+</div>
+{% endblock %}
