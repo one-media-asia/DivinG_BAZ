@@ -1,0 +1,3 @@
+([('DivingApp',
+   '/Users/OneMedia/scuba-admin/DivinG_BAZ/dist/DivingApp',
+   'EXECUTABLE')],)

@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+
+{% block title %}Equipment - Diving Administration{% endblock %}
+
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+    <h1 style="color: white;">Equipment Management</h1>
+</div>
+
+<div class="card">
+    <h2 style="margin-bottom: 1.5rem;">Add New Equipment</h2>
+    <form method="POST">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+                <label for="diver_id">Diver *</label>
+                <select id="diver_id" name="diver_id" required>
+                    <option value="">Select a Diver</option>
+                    {% for diver in divers %}
+                    <option value="{{ diver.id }}">{{ diver.first_name }} {{ diver.last_name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="equipment_type">Equipment Type *</label>
+                <select id="equipment_type" name="equipment_type" required>
+                    <option value="">Select Type</option>
+                    <option value="BCD">BCD (Buoyancy Control Device)</option>
+                    <option value="Tank">Tank/Cylinder</option>
+                    <option value="Regulator">Regulator</option>
+                    <option value="Wetsuit">Wetsuit</option>
+                    <option value="Fins">Fins</option>
+                    <option value="Mask">Mask</option>
+                    <option value="Computer">Dive Computer</option>
+                    <option value="Light">Dive Light</option>
+                    <option value="Weight">Weight Belt</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="brand">Brand</label>
+                <input type="text" id="brand" name="brand">
+            </div>
+            <div class="form-group">
+                <label for="model">Model</label>
+                <input type="text" id="model" name="model">
+            </div>
+            <div class="form-group">
+                <label for="serial_number">Serial Number</label>
+                <input type="text" id="serial_number" name="serial_number">
+            </div>
+            <div class="form-group">
+                <label for="condition">Condition</label>
+                <select id="condition" name="condition">
+                    <option value="Good">Good</option>
+                    <option value="Fair">Fair</option>
+                    <option value="Needs Repair">Needs Repair</option>
+                </select>
+            </div>
+        </div>
+        <button type="submit">Add Equipment</button>
+    </form>
+</div>
+
+<div class="card">
+    <h2 style="margin-bottom: 1.5rem;">Your Equipment</h2>
+    {% if equipment %}
+    <table>
+        <thead>
+            <tr>
+                <th>Diver</th>
+                <th>Type</th>
+                <th>Brand</th>
+                <th>Model</th>
+                <th>Serial Number</th>
+                <th>Condition</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for eq in equipment %}
+            <tr>
+                <td><strong>{{ eq.owner.first_name }} {{ eq.owner.last_name }}</strong></td>
+                <td>{{ eq.equipment_type }}</td>
+                <td>{{ eq.brand or 'N/A' }}</td>
+                <td>{{ eq.model or 'N/A' }}</td>
+                <td>{{ eq.serial_number or 'N/A' }}</td>
+                <td>
+                    <span style="padding: 0.25rem 0.75rem; border-radius: 3px; background: 
+                    {% if eq.condition == 'Good' %}#d5f4e6; color: #27ae60;
+                    {% elif eq.condition == 'Fair' %}#fde3d1; color: #e67e22;
+                    {% else %}#fadbd8; color: #e74c3c;
+                    {% endif %}
+                    ">{{ eq.condition }}</span>
+                </td>
+                <td>
+                    <form method="POST" action="{{ url_for('delete_equipment', eq_id=eq.id) }}" style="display: inline;">
+                        <button type="submit" class="btn-danger" style="padding: 0.5rem 1rem; font-size: 0.9rem;" onclick="return confirm('Delete this equipment?');">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p style="color: #999; text-align: center; padding: 2rem;">No equipment registered yet. Add equipment above!</p>
+    {% endif %}
+</div>
+{% endblock %}

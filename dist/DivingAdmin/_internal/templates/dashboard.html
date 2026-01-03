@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Diving Administration{% endblock %}
+
+{% block content %}
+<h1 style="color: white; margin-bottom: 2rem;">Welcome, {{ current_user.username }}! 👋</h1>
+
+<div style="margin-bottom: 2rem;">
+    <div class="stat-box">
+        <h3>{{ diver_count }}</h3>
+        <p>Total Divers</p>
+    </div>
+    <div class="stat-box">
+        <h3>{{ dive_count }}</h3>
+        <p>Total Dives</p>
+    </div>
+    <div class="stat-box">
+        <h3>{{ equipment_count }}</h3>
+        <p>Equipment Items</p>
+    </div>
+</div>
+
+<div class="card">
+    <h2>Quick Start</h2>
+    <p style="margin-bottom: 1.5rem; color: #666;">Manage your diving activities:</p>
+    <div class="grid">
+        <a href="{{ url_for('divers') }}" style="text-decoration: none; color: inherit;">
+            <div style="padding: 1.5rem; background: #f8f9fa; border-radius: 5px; text-align: center; cursor: pointer; transition: transform 0.3s;">
+                <h3 style="color: #667eea; margin-bottom: 0.5rem;">🤿 Manage Divers</h3>
+                <p style="color: #666; font-size: 0.9rem;">Add, edit, and manage diver profiles and certifications</p>
+            </div>
+        </a>
+        <a href="{{ url_for('equipment') }}" style="text-decoration: none; color: inherit;">
+            <div style="padding: 1.5rem; background: #f8f9fa; border-radius: 5px; text-align: center; cursor: pointer; transition: transform 0.3s;">
+                <h3 style="color: #667eea; margin-bottom: 0.5rem;">⚙️ Equipment</h3>
+                <p style="color: #666; font-size: 0.9rem;">Track and maintain diving equipment</p>
+            </div>
+        </a>
+        <a href="{{ url_for('dives') }}" style="text-decoration: none; color: inherit;">
+            <div style="padding: 1.5rem; background: #f8f9fa; border-radius: 5px; text-align: center; cursor: pointer; transition: transform 0.3s;">
+                <h3 style="color: #667eea; margin-bottom: 0.5rem;">📊 Log Dives</h3>
+                <p style="color: #666; font-size: 0.9rem;">Record and track your diving adventures</p>
+            </div>
+        </a>
+        <a href="{{ url_for('dive_sites') }}" style="text-decoration: none; color: inherit;">
+            <div style="padding: 1.5rem; background: #f8f9fa; border-radius: 5px; text-align: center; cursor: pointer; transition: transform 0.3s;">
+                <h3 style="color: #667eea; margin-bottom: 0.5rem;">📍 Dive Sites</h3>
+                <p style="color: #666; font-size: 0.9rem;">Explore dive sites and their details</p>
+            </div>
+        </a>
+    </div>
+</div>
+{% endblock %}
