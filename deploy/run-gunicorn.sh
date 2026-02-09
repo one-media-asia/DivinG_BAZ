@@ -12,5 +12,5 @@ fi
 
 # Run gunicorn
 cd "$PROJECT_DIR"
-echo "Starting gunicorn on port 3000..."
-gunicorn --workers 3 --bind 127.0.0.1:3000 --timeout 90 app:app
+echo "Starting gunicorn on port 5000..."
+gunicorn --workers 3 --bind 127.0.0.1:5000 --timeout 90 app:app
