@@ -19,3 +19,7 @@ if command -v gunicorn >/dev/null 2>&1; then
 else
     exec python3 -m gunicorn --workers 3 --bind 127.0.0.1:5000 --timeout 90 app:app
 fi
+ss -ltnp | grep 5000
+curl -v http://localhost/
+sudo journalctl -u nginx -n 200 --no-pager
+tail -f gunicorn.log
