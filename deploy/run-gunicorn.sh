@@ -13,4 +13,9 @@ fi
 # Run gunicorn
 cd "$PROJECT_DIR"
 echo "Starting gunicorn on port 5000..."
-gunicorn --workers 3 --bind 127.0.0.1:5000 --timeout 90 app:app
+## Prefer an activated venv's gunicorn, fall back to module run
+if command -v gunicorn >/dev/null 2>&1; then
+    exec gunicorn --workers 3 --bind 127.0.0.1:5000 --timeout 90 app:app
+else
+    exec python3 -m gunicorn --workers 3 --bind 127.0.0.1:5000 --timeout 90 app:app
+fi
