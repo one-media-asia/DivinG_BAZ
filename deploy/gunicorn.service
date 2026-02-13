@@ -11,7 +11,7 @@ Description=gunicorn daemon for DivinG_BAZ
 After=network.target
 
 [Service]
-Type=notify
+Type=simple
 User=ubuntu
 Group=www-data
 WorkingDirectory=/home/ubuntu/DivinG_BAZ
