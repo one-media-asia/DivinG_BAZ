@@ -48,6 +48,7 @@ source .venv/bin/activate
 
 # Install dependencies
 pip install -r requirements.txt
+
 ```
 
 ---
@@ -61,12 +62,12 @@ pip install -r requirements.txt
 sudo apt update
 
 # Install nginx
-sudo apt install nginx -y
+ls
 
 # Create systemd service for gunicorn
 sudo cp deploy/gunicorn.service /etc/systemd/system/
 sudo systemctl daemon-reload
-sudo systemctl enable gunicorn
+sudo systemctl enable gunicornfl
 sudo systemctl start gunicorn
 
 # Check if gunicorn is running
@@ -76,7 +77,7 @@ sudo systemctl status gunicorn
 ### Test Gunicorn locally:
 ```bash
 # SSH into EC2 and test
-curl http://127.0.0.1:3000
+curl http://127.0.0.1:5000
 # Should show your Flask app response
 ```
 
@@ -133,10 +134,10 @@ sudo tail -f /var/log/nginx/error.log
 sudo tail -f /var/log/nginx/access.log
 ```
 
-### Port 3000 not responding:
+### Port 5000 not responding:
 ```bash
 # Check if process is listening
-sudo ss -tlnp | grep 3000
+sudo ss -tlnp | grep 5000
 
 # Restart gunicorn
 sudo systemctl restart gunicorn
