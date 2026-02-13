@@ -17,7 +17,7 @@ Group=www-data
 WorkingDirectory=/home/ubuntu/DivinG_BAZ
 Environment=PATH=/home/ubuntu/.local/bin:/usr/bin
 Environment=PYTHONUNBUFFERED=1
-ExecStart=/usr/bin/gunicorn --workers 3 --bind 127.0.0.1:8000 --timeout 90 --access-logfile - --error-logfile - app:app
+ExecStart=/usr/bin/gunicorn --workers 3 --bind 0.0.0.0:8000 --timeout 90 --access-logfile - --error-logfile - app:app
 Restart=always
 RestartSec=10
 
