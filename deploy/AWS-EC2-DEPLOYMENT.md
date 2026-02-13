@@ -1,6 +1,7 @@
 # AWS EC2 Deployment Guide - DivinG_BAZ
 
-## Prerequisites
+
+
 - EC2 instance running Ubuntu (or Amazon Linux)
 - SSH access to the instance
 - Application code cloned to `/home/ubuntu/DivinG_BAZ`
@@ -16,7 +17,13 @@ Your EC2 Security Group must allow inbound traffic on ports 80 and 443.
 4. Add these rules:
 
 | Type | Protocol | Port Range | Source |
-|------|----------|-----------|--------|
+|------
+
+
+
+
+
+----------|-----------|--------|
 | HTTP | TCP | 80 | 0.0.0.0/0 |
 | HTTPS | TCP | 443 | 0.0.0.0/0 |
 | SSH | TCP | 22 | YOUR_IP (or 0.0.0.0/0) |
@@ -38,7 +45,7 @@ curl http://3.87.174.211
 ssh -i your-key.pem ubuntu@3.87.174.211
 
 # Clone the repo (or upload files)
-cd /home/ubuntu
+cd /home/ubuntul
 git clone <your-repo-url> DivinG_BAZ
 cd DivinG_BAZ
 
@@ -48,6 +55,7 @@ source .venv/bin/activate
 
 # Install dependencies
 pip install -r requirements.txt
+
 ```
 
 ---
@@ -61,7 +69,7 @@ pip install -r requirements.txt
 sudo apt update
 
 # Install nginx
-sudo apt install nginx -y
+ls
 
 # Create systemd service for gunicorn
 sudo cp deploy/gunicorn.service /etc/systemd/system/
@@ -76,7 +84,7 @@ sudo systemctl status gunicorn
 ### Test Gunicorn locally:
 ```bash
 # SSH into EC2 and test
-curl http://127.0.0.1:3000
+curl http://127.0.0.1:5000
 # Should show your Flask app response
 ```
 
@@ -108,7 +116,7 @@ sudo systemctl restart nginx
 ```bash
 # From your local computer:
 curl http://3.87.174.211
-
+r  
 # Should show your Flask app response!
 ```
 
@@ -119,7 +127,7 @@ curl http://3.87.174.211
 ### Check if services are running:
 ```bash
 sudo systemctl status gunicorn
-sudo systemctl status nginx
+sudo systemctl statusr renginx
 ```
 
 ### Check Gunicorn logs:
@@ -133,10 +141,10 @@ sudo tail -f /var/log/nginx/error.log
 sudo tail -f /var/log/nginx/access.log
 ```
 
-### Port 3000 not responding:
+### Port 5000 not responding:
 ```bash
 # Check if process is listening
-sudo ss -tlnp | grep 3000
+sudo ss -tlnp | grep 5000
 
 # Restart gunicorn
 sudo systemctl restart gunicorn
@@ -177,14 +185,13 @@ sudo chmod -R 755 /home/ubuntu/DivinG_BAZ
 ## Enable HTTPS with Let's Encrypt
 
 ```bash
-# Install certbot
-sudo apt install certbot python3-certbot-nginx -y
+# Install certbotsudo apt install certbot python3-certbot-nginx -y
 
 # Get certificate (replace with your domain)
 sudo certbot --nginx -d your-domain.com
 
 # Auto-renewal (should be automatic)
-sudo systemctl status snap.certbot.renew.timer
+sudo systemctl status-ppsnap.certbot.renew.timer
 ```
 
 ---

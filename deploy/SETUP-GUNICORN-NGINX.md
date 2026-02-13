@@ -13,18 +13,26 @@ This guide covers setting up **Gunicorn** (WSGI application server) and **Nginx*
 
 ## Quick Start
 
-### 1. Start Gunicorn (on port 3000)
+### 1. 
+
 
 From the project root directory:
 
 ```bash
-gunicorn --workers 3 --bind 127.0.0.1:3000 app:app
+
+
+
+
+
 ```
 
 Or use the provided script:
 
 ```bash
 cd deploy/
+
+
+
 bash run-gunicorn.sh
 ```
 
@@ -38,9 +46,7 @@ sudo cp deploy/nginx-port3000.conf /usr/local/etc/nginx/servers/diving.conf
 
 Start nginx:
 
-```bash
-sudo brew services start nginx
-```
+```bas```
 
 Or restart if already running:
 
@@ -164,5 +170,5 @@ For 4 CPU cores, try: `--workers 9` (formula: 2 * cores + 1)
 ## Security Notes
 
 - Nginx is the public-facing server (handles port 80)
-- Gunicorn only listens on 127.0.0.1 (local loopback) for security
+-  (local loopback) for security
 - Add firewall rules to only allow traffic to port 80/443

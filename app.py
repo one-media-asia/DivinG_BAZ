@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify, redirect, url_for, session, flash
+from flask import Flask, render_template, request, jsonify, redirect, url_for, session
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -165,8 +165,7 @@ def login():
         if user and user.check_password(password):
             login_user(user)
             return redirect(url_for('dashboard'))
-        flash('Invalid username or password', 'error')
-        return redirect(url_for('login'))
+        return jsonify({'error': 'Invalid credentials'}), 401
     return render_template('login.html')
 
 @app.route('/logout')
@@ -181,13 +180,11 @@ def dashboard():
     diver_count = Diver.query.filter_by(user_id=current_user.id).count()
     dive_count = db.session.query(Dive).join(dive_diver).join(Diver).filter(Diver.user_id == current_user.id).count()
     equipment_count = db.session.query(Equipment).join(Diver).filter(Diver.user_id == current_user.id).count()
-    user_count = User.query.count() if current_user.role == 'admin' else None
     
     return render_template('dashboard.html', 
                          diver_count=diver_count,
                          dive_count=dive_count,
-                         equipment_count=equipment_count,
-                         user_count=user_count)
+                         equipment_count=equipment_count)
 
 # ============ Diver Routes ============
 
@@ -399,13 +396,29 @@ def delete_certification(cert_id):
     db.session.commit()
     return redirect(url_for('certifications'))
 
-# ============ User Management Routes (Admin Only) ============
+# ============ Admin Routes ============
 
-@app.route('/users')
+@app.route('/users', methods=['GET', 'POST'])
 @login_required
 def users():
     if current_user.role != 'admin':
         return jsonify({'error': 'Unauthorized'}), 403
+    
+    if request.method == 'POST':
+        username = request.form.get('username')
+        email = request.form.get('email')
+        password = request.form.get('password')
+        role = request.form.get('role', 'user')
+        
+        if User.query.filter_by(username=username).first():
+            return jsonify({'error': 'Username already exists'}), 400
+        
+        user = User(username=username, email=email, role=role)
+        user.set_password(password)
+        db.session.add(user)
+        db.session.commit()
+        return redirect(url_for('users'))
+    
     all_users = User.query.all()
     return render_template('users.html', users=all_users)
 
@@ -414,16 +427,17 @@ def users():
 def edit_user(user_id):
     if current_user.role != 'admin':
         return jsonify({'error': 'Unauthorized'}), 403
+    
     user = User.query.get_or_404(user_id)
+    
     if request.method == 'POST':
-        user.username = request.form.get('username', user.username)
-        user.email = request.form.get('email', user.email)
-        user.role = request.form.get('role', user.role)
-        password = request.form.get('password')
-        if password:
-            user.set_password(password)
+        user.email = request.form.get('email')
+        user.role = request.form.get('role')
+        if request.form.get('password'):
+            user.set_password(request.form.get('password'))
         db.session.commit()
         return redirect(url_for('users'))
+    
     return render_template('edit_user.html', user=user)
 
 @app.route('/user/<int:user_id>/delete', methods=['POST'])
@@ -431,9 +445,11 @@ def edit_user(user_id):
 def delete_user(user_id):
     if current_user.role != 'admin':
         return jsonify({'error': 'Unauthorized'}), 403
+    
     user = User.query.get_or_404(user_id)
     if user.id == current_user.id:
-        return jsonify({'error': 'Cannot delete yourself'}), 400
+        return jsonify({'error': 'Cannot delete your own account'}), 400
+    
     db.session.delete(user)
     db.session.commit()
     return redirect(url_for('users'))
