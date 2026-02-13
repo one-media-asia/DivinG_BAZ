@@ -10,7 +10,7 @@
 Your EC2 Security Group must allow inbound traffic on ports 80 and 443.
 
 ### In AWS Console:
-1. Go to **EC2 → Security Groups**
+1. EC2 → Security Groups**
 2. Click on your instance's security group
 3. Click **Edit inbound rules**
 4. Add these rules:
