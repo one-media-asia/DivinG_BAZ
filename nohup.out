@@ -1,0 +1,11 @@
+[2026-02-11 22:17:06 +0800] [20119] [INFO] Starting gunicorn 22.0.0
+[2026-02-11 22:17:06 +0800] [20119] [INFO] Listening at: http://127.0.0.1:3000 (20119)
+[2026-02-11 22:17:06 +0800] [20119] [INFO] Using worker: sync
+[2026-02-11 22:17:06 +0800] [20121] [INFO] Booting worker with pid: 20121
+[2026-02-11 22:17:06 +0800] [20123] [INFO] Booting worker with pid: 20123
+[2026-02-11 22:17:06 +0800] [20124] [INFO] Booting worker with pid: 20124
+[2026-02-11 22:17:17 +0800] [20119] [INFO] Handling signal: int
+[2026-02-11 22:17:17 +0800] [20123] [INFO] Worker exiting (pid: 20123)
+[2026-02-11 22:17:17 +0800] [20124] [INFO] Worker exiting (pid: 20124)
+[2026-02-11 22:17:17 +0800] [20121] [INFO] Worker exiting (pid: 20121)
+[2026-02-11 22:17:18 +0800] [20119] [INFO] Shutting down: Master
