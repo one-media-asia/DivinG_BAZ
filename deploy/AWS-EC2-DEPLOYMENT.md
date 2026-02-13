@@ -1,6 +1,7 @@
 # AWS EC2 Deployment Guide - DivinG_BAZ
 
-## Prerequisites
+
+
 - EC2 instance running Ubuntu (or Amazon Linux)
 - SSH access to the instance
 - Application code cloned to `/home/ubuntu/DivinG_BAZ`
@@ -10,13 +11,19 @@
 Your EC2 Security Group must allow inbound traffic on ports 80 and 443.
 
 ### In AWS Console:
-1. EC2 → Security Groups**
+1. Go to **EC2 → Security Groups**
 2. Click on your instance's security group
 3. Click **Edit inbound rules**
 4. Add these rules:
 
 | Type | Protocol | Port Range | Source |
-|------|----------|-----------|--------|
+|------
+
+
+
+
+
+----------|-----------|--------|
 | HTTP | TCP | 80 | 0.0.0.0/0 |
 | HTTPS | TCP | 443 | 0.0.0.0/0 |
 | SSH | TCP | 22 | YOUR_IP (or 0.0.0.0/0) |
@@ -38,7 +45,7 @@ curl http://3.87.174.211
 ssh -i your-key.pem ubuntu@3.87.174.211
 
 # Clone the repo (or upload files)
-cd /home/ubuntu
+cd /home/ubuntul
 git clone <your-repo-url> DivinG_BAZ
 cd DivinG_BAZ
 
@@ -67,7 +74,7 @@ ls
 # Create systemd service for gunicorn
 sudo cp deploy/gunicorn.service /etc/systemd/system/
 sudo systemctl daemon-reload
-sudo systemctl enable gunicornfl
+sudo systemctl enable gunicorn
 sudo systemctl start gunicorn
 
 # Check if gunicorn is running
@@ -109,7 +116,7 @@ sudo systemctl restart nginx
 ```bash
 # From your local computer:
 curl http://3.87.174.211
-
+r  
 # Should show your Flask app response!
 ```
 
@@ -120,7 +127,7 @@ curl http://3.87.174.211
 ### Check if services are running:
 ```bash
 sudo systemctl status gunicorn
-sudo systemctl status nginx
+sudo systemctl statusr renginx
 ```
 
 ### Check Gunicorn logs:
@@ -178,14 +185,13 @@ sudo chmod -R 755 /home/ubuntu/DivinG_BAZ
 ## Enable HTTPS with Let's Encrypt
 
 ```bash
-# Install certbot
-sudo apt install certbot python3-certbot-nginx -y
+# Install certbotsudo apt install certbot python3-certbot-nginx -y
 
 # Get certificate (replace with your domain)
 sudo certbot --nginx -d your-domain.com
 
 # Auto-renewal (should be automatic)
-sudo systemctl status snap.certbot.renew.timer
+sudo systemctl status-ppsnap.certbot.renew.timer
 ```
 
 ---
