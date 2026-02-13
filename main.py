@@ -18,7 +18,8 @@ sys.path.insert(0, current_dir)
 def open_browser():
     """Open the web app in browser after a short delay"""
     time.sleep(2)  # Wait for Flask to start
-    webbrowser.open('http://127.0.0.1:5001')
+    port = int(os.environ.get('PORT', 5001))
+    webbrowser.open(f'http://127.0.0.1:{port}')
 
 def main():
     """Main entry point for the desktop application"""
@@ -35,9 +36,10 @@ def main():
         browser_thread.start()
 
         # Run the Flask app
+        port = int(os.environ.get('PORT', 5001))
         print("Starting Diving Admin...")
-        print("Opening browser at http://127.0.0.1:5001")
-        app.run(host='127.0.0.1', port=5001, debug=False)
+        print(f"Opening browser at http://127.0.0.1:{port}")
+        app.run(host='127.0.0.1', port=port, debug=False)
 
     except Exception as e:
         print(f"Error starting application: {e}")
